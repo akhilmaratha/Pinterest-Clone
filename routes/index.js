@@ -6,6 +6,7 @@ const passport = require('passport');
 const localstrategy= require("passport-local");
 passport.use(new localstrategy(userModel.authenticate()));
 const upload = require("./multer");
+const post = require('./post');
 router.get('/', function(req, res, next) {
   res.render('index',{nav:false});
 });
@@ -34,6 +35,12 @@ router.get('/show/posts',isLoggedIn,async function(req, res, next) {
   .findOne({username:req.session.passport.user})
   .populate("posts")
   res.render("show",{user,nav:true});
+});
+router.get('/pin/:id',isLoggedIn,async function(req, res, next) {
+  const postId = req.params.id;
+  const UserPost = await post.findById(postId)
+  .populate("user")
+  res.render('pin', { UserPost, nav: true });
 });
 // router.post('/createpost',isLoggedIn,upload.single("postimage"),async function(req, res, next){
 //   const user= await userModel.findOne({username:req.session.passport.user});
@@ -85,9 +92,7 @@ router.post('/login',passport.authenticate("local",{
   failureRedirect: "/",
   successRedirect: "/profile",
 
-}), function(req, res, next) {
-
-});
+}), function(req, res, next) {});
 router.get("/logout", function(req,res,next){
   req.logout(function(err){
     if(err){
