@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const userModel= require("./users");
 const postModel= require("./post");
+const commentModel = require('./comment');
 const passport = require('passport');
 const localstrategy= require("passport-local");
 passport.use(new localstrategy(userModel.authenticate()));
@@ -36,17 +37,14 @@ router.get('/show/posts',isLoggedIn,async function(req, res, next) {
   .populate("posts")
   res.render("show",{user,nav:true});
 });
-router.get('/pin/:id',isLoggedIn,async function(req, res, next) {
-  const postId = req.params.id;
-  const UserPost = await post.findById(postId)
-  .populate("user")
-  res.render('pin', { UserPost, nav: true });
-});
-// router.post('/createpost',isLoggedIn,upload.single("postimage"),async function(req, res, next){
-//   const user= await userModel.findOne({username:req.session.passport.user});
-//   res.render("post",{user,nav:true});
-// });
 
+router.route('/pin/:id')
+  .get(isLoggedIn, async function (req, res, next) {
+    const postId = req.params.id;
+    const UserPost = await post.findById(postId).populate('user');
+    const { user } = UserPost;
+    res.render('pin', { UserPost, user, nav: true });   
+  });  
 router.get('/add',isLoggedIn,async function(req, res, next){
   const user= await userModel.findOne({username:req.session.passport.user});
   res.render("add",{user,nav:true});
@@ -90,7 +88,7 @@ router.post('/register', function(req, res, next) {
 
 router.post('/login',passport.authenticate("local",{
   failureRedirect: "/",
-  successRedirect: "/profile",
+  successRedirect: "/feed",
 
 }), function(req, res, next) {});
 router.get("/logout", function(req,res,next){
@@ -101,15 +99,10 @@ router.get("/logout", function(req,res,next){
     res.redirect('/')
   })
 }) 
-
-
 function isLoggedIn(req,res,next){
 if(req.isAuthenticated()){
   return next();
 }
 res.redirect("/")
 }
-
-
-
 module.exports = router;

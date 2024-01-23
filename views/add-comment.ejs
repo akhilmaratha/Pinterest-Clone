@@ -1,0 +1,21 @@
+<% include ./partials/header.ejs %>
+<!-- Assuming 'comments' is an array of comments retrieved from the server -->
+<div class="mt-6">
+    <h2 class="text-lg font-semibold mb-2">Comments</h2>
+    <!-- Render existing comments -->
+    <% comments.forEach(comment => { %>
+        <div class="flex items-center mb-2">
+            <img src="<%= comment.commenter.avatar %>" alt="Commenter Avatar" class="w-8 h-8 rounded-full mr-2">
+            <p class="text-gray-700"><%= comment.commenter.username %>: <%= comment.text %></p>
+        </div>
+    <% }); %>
+
+    <!-- Form to add new comment -->
+    <form action="/add-comment" method="post">
+        <label for="comment" class="sr-only">Add a comment</label>
+        <textarea name="comment" id="comment" class="w-full p-2 border rounded-md" placeholder="Add a comment"></textarea>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md mt-2">Add Comment</button>
+    </form>
+</div>
+
+<% include ./partials/footer.ejs %>

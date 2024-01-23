@@ -49,10 +49,10 @@
               <div class="flex items-center text-black-500">
              <a href="/profile">
               <div class=" relative w-8 h-8  rounded-full overflow-hidden" >
-               <!-- <img
+               <img
             class="w-full h-full object-cover"
-            src="/images/uploads/<%= //user.profileImage%>"
-            alt=""/> -->
+            src="/images/uploads/<%= user.profileImage%>"
+            alt=""/>
               </div>
              </a>    
               <i class="ri-arrow-down-s-line  text-white-900 pl-5 text-lg" id="menu-button"></i>
@@ -72,13 +72,13 @@
                   <div class=" relative w-12 h-12 bg-zinc-200 rounded-full overflow-hidden">
                  <img
               class="w-full h-full object-cover"
-              src="/images/uploads/<%=// user.profileImage%>"
+              src="/images/uploads/<%= user.profileImage%>"
               alt=""/>
                 </div> 
                   <div class="flex flex-col ml-3 ">
-                    <h1 class="text-gray-700 block text-lg"><%=// user.username%></h1>
+                    <h1 class="text-gray-700 block text-lg"><%= user.username%></h1>
                     <h2 class="text-gray-700 block text-sm">Personal</h2>
-                    <h2 class="text-gray-700 block text-sm "><%=// user.email%></h2>
+                    <h2 class="text-gray-700 block text-sm "><%= user.email%></h2>
                   </div>
               </div> 
             </a>
