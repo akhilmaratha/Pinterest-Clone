@@ -43,8 +43,35 @@ router.route('/pin/:id')
     const postId = req.params.id;
     const UserPost = await post.findById(postId).populate('user');
     const { user } = UserPost;
-    res.render('pin', { UserPost, user, nav: true });   
+    const comments = await commentModel.find({ postId }).populate('user').sort({ createdAt: 'desc' });
+    res.render('pin', { UserPost, user, comments, nav: true });   
   });  
+  router.post('/pin/:id/add-comment', isLoggedIn, async function (req, res) {
+      const postId = req.params.id;
+      const { comment } = req.body;
+  
+      const commenter = req.user; // Assuming you have user information in req.user
+  
+      // Create a new comment
+      const newComment = await commentModel.create({
+        text: comment,
+        user: commenter._id,
+        postId: postId,
+        commenter: {
+          username: commenter.username,
+          avatar: commenter.profileImage // Assuming 'profileImage' is the property for user avatar
+        }
+      });
+  
+      // Add the new comment to the post's comments array
+      const post = await postModel.findById(postId);
+      post.comments.push(newComment);
+      await post.save();
+  
+      // Redirect back to the pin page
+      res.redirect(`/pin/${postId}`);
+  });
+  
 router.get('/add',isLoggedIn,async function(req, res, next){
   const user= await userModel.findOne({username:req.session.passport.user});
   res.render("add",{user,nav:true});

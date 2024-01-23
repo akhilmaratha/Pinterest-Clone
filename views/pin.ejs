@@ -1,68 +1,104 @@
 <% include ./partials/header.ejs %>
-<div class="container mx-auto my-8 p-8 bg-white shadow-lg rounded-md flex">
-    <!-- Left Side - Images -->
-    <div class="w-1/2">
-        <img src="/images/uploads/<%= UserPost.image%>" alt="Pin Image 1" class="w-full h-full object-cover rounded-lg mb-4">
-        <!-- <img src="" alt="Pin Image 2" class="w-full h-full object-cover rounded-lg"> -->
-    </div>
-
-    <!-- Right Side - Details -->
-    <div class="w-1/2 ml-8">
-      
-      <div class="flex items-center justify-between ml-30 mb-3">
-        <!-- Icons on the left -->
-        <div class="flex items-center space-x-4">
-            <i class="ri-chat-upload-line text-2xl"></i>
-            <i class="ri-grid-fill text-2xl"></i>
+    <div class="container mx-auto my-8 p-8 bg-white shadow-lg rounded-md flex">
+        <!-- Left Side - Images -->
+        <div class="w-1/2">
+            <img src="/images/uploads/<%= UserPost.image%>" alt="Pin Image 1"
+                class="w-full h-full object-cover rounded-lg mb-4">
+            <!-- <img src="" alt="Pin Image 2" class="w-full h-full object-cover rounded-lg"> -->
         </div>
-    
-        <!-- Search button on the right -->
-        <button class="bg-red-500 text-white px-4 py-2 rounded-full">Share</button>
-    </div>
-    <div class="mb-5 mr-3">
-      <a href="#" >Links</a>
-    </div>
-       
 
-        <h1 class="text-3xl font-semibold mb-4"><%=UserPost.title%></h1>
+        <!-- Right Side - Details -->
+        <div class="w-1/2 ml-8">
 
-        <p class="text-gray-600"><%=UserPost.description%>.</p> 
- <div class="flex items-center mb-6">
-          
-            <img src="/images/uploads/<%= user.profileImage%>" alt="User Logo" class="w-12 h-12 rounded-full mr-4">
-            <div>
-                <h2 class="text-xl font-semibold">@Username</h2>
-                <p class="text-gray-500">User Full Name</p>
+            <div class="flex items-center justify-between ml-30 mb-3">
+                <!-- Icons on the left -->
+                <div class="flex items-center space-x-4">
+                    <i class="ri-chat-upload-line text-2xl"></i>
+                    <i class="ri-grid-fill text-2xl"></i>
+                </div>
+
+                <!-- Search button on the right -->
+                <button class="bg-red-500 text-white px-4 py-2 rounded-full">Share</button>
             </div>
+            <div class="mb-5 mr-3">
+                <a href="#">Links</a>
+            </div>
+
+
+            <h1 class="text-3xl font-semibold mb-4">
+                <%=UserPost.title%>
+            </h1>
+
+            <p class="text-gray-600 mb-5">
+                <%=UserPost.description%>.
+            </p>
+
+            <div class="flex items-center justify-between ml-30 mb-3">
+                <!-- Icons on the left -->
+                <div class="flex items-center space-x-3">
+                    <img src="/images/uploads/<%= user.profileImage%>" alt="User Logo" class="w-12 h-12 rounded-full ">
+                    <div>
+                        <h2 class="text-xl font-semibold">
+                            <%=user.name%>
+                        </h2>
+                        <h3 class="text-md">1.3m followers</h3>
+                    </div>
+                </div>
+                <!-- Search button on the right -->
+                <button class="bg-red-500 text-white px-4 py-2 rounded-full ml-10">follow</button>
+            </div>
+
+            <!-- Comments Section (Sample) -->
+            <!-- Assuming 'comments' is an array of comments retrieved from the server -->
+            <!-- Form to add new comment -->
+            <div class="mt-6 mb-10">
+                <h2 class="text-md font-semibold mb-2">Comments</h2>
+                <!-- Render existing comments -->
+
+                <div class="comments mt-8">
+                    <% comments.forEach(function(comment) { %>
+                        <div class="flex items-center mb-2 p-2 rounded relative">
+                            <!-- Wrap the profile image with an anchor tag -->
+                            <a href="/profile/<%= comment.user._id %>">
+                                <% if (comment.user.profileImage) { %>
+                                    <img src="/images/uploads/<%= comment.user.profileImage %>" alt="Commenter Avatar"
+                                        class="w-8 h-8 rounded-full mr-4">
+                                <% } %>
+                            </a>
+                            <p class="text-gray-800 ">
+                                <strong><%= comment.user.username %></strong>: <%= comment.text %>
+                            </p>
+                            <% if (user && user._id.toString() === comment.user._id.toString()) { %>
+                                <!-- Display delete and edit icons only for the current user's comments -->
+                                <div class="absolute top-0 right-0 p-2">
+                                    <!-- Edit Icon -->
+                                    <i class="ri-pencil-line text-gray-500 cursor-pointer"></i>
+                                    <!-- Delete Icon -->
+                                    <i class="ri-delete-bin-line text-red-500 cursor-pointer"></i>
+                                </div>
+                            <% } %>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+            <!-- Form to add new comment at the bottom -->
+            <form action="/pin/<%= UserPost._id %>/add-comment" method="post" class="fixed bottom-0 left-1/2 right-1.5 p-4 rounded-md bg-white max-w-full">
+                <div class="flex items-center justify-between ml-2">
+                    <div class="relative w-8 h-8 rounded-full overflow-hidden">
+                        <img class="w-full h-full object-cover" src="/images/uploads/<%= user.profileImage %>" alt="" />
+                    </div>
+                    <div class="flex-grow ml-1 relative"> <!-- Use "flex-grow" to make the container grow and cover the remaining space -->
+                        <label for="comment" class="sr-only">Add a comment</label>
+                        <input type="text" name="comment" id="comment" class="w-full p-2 border rounded-full pl-10" placeholder="Add a comment">
+                    </div>
+                    <div>
+                        <button type="submit" ><i class="ri-send-plane-fill font-semibold p-2  text-2xl"></i></button>
+                    </div>
+                </div>
+            </form>    
         </div>
-
-        <!-- Comments Section (Sample) -->
-      <!-- Assuming 'comments' is an array of comments retrieved from the server -->
-  <!-- Form to add new comment -->
-  <div class="mt-6 mb-10">
-    <h2 class="text-lg font-semibold mb-2">Comments</h2>
-    <!-- Render existing comments -->
-    <%UserPost.comments.forEach(comment => { %>
-        <div class="flex items-center mb-2">
-            <img src="<%= comment.commenter.profileImage %>" alt="Commenter Avatar" class="w-8 h-8 rounded-full mr-2">
-            <p class="text-gray-700"><%= comment.commenter.username %>: <%= comment.text %></p>
-        </div>
-    <% }); %>
-</div>
-
-<!-- Form to add new comment at the bottom -->
-<form action="/pin/<%= UserPost._id %>/add-comment" method="post" class="mb-0">
-  <label for="comment" class="sr-only">Add a comment</label>
-  <textarea name="comment" id="comment" class="w-full p-2 border rounded-md" placeholder="Add a comment"></textarea>
-  <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md mt-2">Add Comment</button>
-</form>
-
-
-</div>
-
     </div>
-</div>
+    </div>
+    </div>
 
-<% include ./partials/footer.ejs %>
-
-
+    <% include ./partials/footer.ejs %>
