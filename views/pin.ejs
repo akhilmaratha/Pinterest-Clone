@@ -1,104 +1,229 @@
 <% include ./partials/header.ejs %>
-    <div class="container mx-auto my-8 p-8 bg-white shadow-lg rounded-md flex">
-        <!-- Left Side - Images -->
-        <div class="w-1/2">
-            <img src="/images/uploads/<%= UserPost.image%>" alt="Pin Image 1"
-                class="w-full h-full object-cover rounded-lg mb-4">
-            <!-- <img src="" alt="Pin Image 2" class="w-full h-full object-cover rounded-lg"> -->
+<div class="container mx-auto px-[5%] pb-[2%]  relative">
+  <div
+    class=" h-[20%] w-full mx-auto  my-10 p-4 bg-white shadow-lg rounded-md flex border border-gray-300"
+  >
+    <!-- Left Side - Images -->
+    <div class="container w-1/2 mx-3  min-h-96 overflow-y-auto ">
+      <img
+        src="/images/uploads/<%= UserPost.image%>"
+        alt="Pin Image 1"
+        class="w-full h-full object-cover rounded-lg mb-4"
+      />
+      <!-- <img src="" alt="Pin Image 2" class="w-full h-full object-cover rounded-lg"> -->
+    </div>
+
+    <!-- Right Side - Details -->
+    <div
+      class="relative container w-1/2 ml-8  overflow-y-auto h-full"
+      style="max-height: 500px "
+    >
+      <div class="fixed top-0 left-0 w-full bg-zinc-100 absolute">
+        <div
+          class="container mx-auto flex items-center justify-between px-4 py-3 "
+        >
+          <!-- Icons on the left -->
+          <div class="flex items-center space-x-4">
+            <i class="ri-chat-upload-line text-2xl"></i>
+            <i class="ri-more-fill text-2xl " id="editbtn"></i>
+          </div>
+
+          <!-- Search button on the right -->
+          <div>
+            <button class="bg-red-500 text-white px-4 py-2 rounded-full">
+              Share
+            </button>
+          </div>
+          <div class="absolute top-12 left-[10%]">
+            <div class="edit bg-zinc-200 h-full w-24 rounded-md hidden">
+              <button class="w-full hover:bg-zinc-400 text-md font-semibold editpanelbtn">
+                Edit Pin
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <!-- Right Side - Details -->
-        <div class="w-1/2 ml-8">
+      <div class="content mt-20">
+        <h1 class="text-3xl font-semibold mb-4"><%=UserPost.title%></h1>
 
-            <div class="flex items-center justify-between ml-30 mb-3">
-                <!-- Icons on the left -->
-                <div class="flex items-center space-x-4">
-                    <i class="ri-chat-upload-line text-2xl"></i>
-                    <i class="ri-grid-fill text-2xl"></i>
-                </div>
+        <p class="text-gray-600 mb-5"><%=UserPost.description%>.</p>
+      </div>
 
-                <!-- Search button on the right -->
-                <button class="bg-red-500 text-white px-4 py-2 rounded-full">Share</button>
-            </div>
-            <div class="mb-5 mr-3">
-                <a href="#">Links</a>
-            </div>
+      <div class="flex items-center  justify-between ml-30 mb-3">
+        <!-- Icons on the left -->
+        <div class="flex items-center space-x-3">
+          <img
+            src="/images/uploads/<%= user.profileImage%>"
+            alt="User Logo"
+            class="w-12 h-12 rounded-full"
+          />
+          <div>
+            <h2 class="text-xl font-semibold"><%=user.name%></h2>
+            <h3 class="text-md">1.3m followers</h3>
+          </div>
+        </div>
+        <!-- Search button on the right -->
+        <button class="bg-red-500 text-white px-4 py-2 rounded-full ml-10">
+          follow
+        </button>
+      </div>
 
+      <!-- Comments Section (Sample) -->
+      <!-- Assuming 'comments' is an array of comments retrieved from the server -->
+      <!-- Form to add new comment -->
+      <div class="container mt-6  h-full overflow-y-scroll overflow-hidden" style="max-height: 320px;" >
+        <h2 class="text-md font-semibo ld mb-2">Comments</h2>
+        <!-- Render existing comments -->
 
-            <h1 class="text-3xl font-semibold mb-4">
-                <%=UserPost.title%>
-            </h1>
-
-            <p class="text-gray-600 mb-5">
-                <%=UserPost.description%>.
+        <div class="comments mt-8 ">
+          <% comments.forEach(function(comment) { %>
+          <div class="flex items-center mb-2 p-2 rounded relative">
+            <!-- Wrap the profile image with an anchor tag -->
+            <a href="/profile/<%= comment.user._id %>">
+              <% if (comment.user.profileImage) { %>
+              <img
+                src="/images/uploads/<%= comment.user.profileImage %>"
+                alt="Commenter Avatar"
+                class="w-8 h-8 rounded-full mr-4"
+              />
+              <% } %>
+            </a>
+            <p class="text-gray-800 ">
+              <strong> <%= comment.user.username %> </strong>: <%= comment.text
+              %>
             </p>
+            <% if (user && user._id.toString()===comment.user._id.toString()) {
+            %>
 
-            <div class="flex items-center justify-between ml-30 mb-3">
-                <!-- Icons on the left -->
-                <div class="flex items-center space-x-3">
-                    <img src="/images/uploads/<%= user.profileImage%>" alt="User Logo" class="w-12 h-12 rounded-full ">
-                    <div>
-                        <h2 class="text-xl font-semibold">
-                            <%=user.name%>
-                        </h2>
-                        <h3 class="text-md">1.3m followers</h3>
-                    </div>
-                </div>
-                <!-- Search button on the right -->
-                <button class="bg-red-500 text-white px-4 py-2 rounded-full ml-10">follow</button>
+            <div class="absolute top-0 right-0 p-2">
+              <i class="ri-pencil-line text-gray-500 cursor-pointer"></i>
+
+              <i class="ri-delete-bin-line text-red-500 cursor-pointer"></i>
             </div>
-
-            <!-- Comments Section (Sample) -->
-            <!-- Assuming 'comments' is an array of comments retrieved from the server -->
-            <!-- Form to add new comment -->
-            <div class="mt-6 mb-10">
-                <h2 class="text-md font-semibold mb-2">Comments</h2>
-                <!-- Render existing comments -->
-
-                <div class="comments mt-8">
-                    <% comments.forEach(function(comment) { %>
-                        <div class="flex items-center mb-2 p-2 rounded relative">
-                            <!-- Wrap the profile image with an anchor tag -->
-                            <a href="/profile/<%= comment.user._id %>">
-                                <% if (comment.user.profileImage) { %>
-                                    <img src="/images/uploads/<%= comment.user.profileImage %>" alt="Commenter Avatar"
-                                        class="w-8 h-8 rounded-full mr-4">
-                                <% } %>
-                            </a>
-                            <p class="text-gray-800 ">
-                                <strong><%= comment.user.username %></strong>: <%= comment.text %>
-                            </p>
-                            <% if (user && user._id.toString() === comment.user._id.toString()) { %>
-                                <!-- Display delete and edit icons only for the current user's comments -->
-                                <div class="absolute top-0 right-0 p-2">
-                                    <!-- Edit Icon -->
-                                    <i class="ri-pencil-line text-gray-500 cursor-pointer"></i>
-                                    <!-- Delete Icon -->
-                                    <i class="ri-delete-bin-line text-red-500 cursor-pointer"></i>
-                                </div>
-                            <% } %>
-                        </div>
-                    <% }); %>
-                </div>
-            </div>
-            <!-- Form to add new comment at the bottom -->
-            <form action="/pin/<%= UserPost._id %>/add-comment" method="post" class="fixed bottom-0 left-1/2 right-1.5 p-4 rounded-md bg-white max-w-full">
-                <div class="flex items-center justify-between ml-2">
-                    <div class="relative w-8 h-8 rounded-full overflow-hidden">
-                        <img class="w-full h-full object-cover" src="/images/uploads/<%= user.profileImage %>" alt="" />
-                    </div>
-                    <div class="flex-grow ml-1 relative"> <!-- Use "flex-grow" to make the container grow and cover the remaining space -->
-                        <label for="comment" class="sr-only">Add a comment</label>
-                        <input type="text" name="comment" id="comment" class="w-full p-2 border rounded-full pl-10" placeholder="Add a comment">
-                    </div>
-                    <div>
-                        <button type="submit" ><i class="ri-send-plane-fill font-semibold p-2  text-2xl"></i></button>
-                    </div>
-                </div>
-            </form>    
+            <% } %>
+          </div>
+          <% }); %>
         </div>
-    </div>
-    </div>
+      </div>
+      <!-- Form to add new comment at the bottom -->
+      <form action="/pin/<%= UserPost._id %>/add-comment"
+        method="post"
+        class=" absolute w-full bg-white bottom-[0%] right-[2%] p-4 rounded-md ">
+        <div class="flex  items-center justify-between ml-2">
+          <div class="relative w-8 h-8  rounded-full overflow-hidden">
+            <img
+              class="w-full h-full object-cover"
+              src="/images/uploads/<%= user.profileImage %>"
+              alt=""
+            />
+          </div>
+          <div class="flex-grow ml-1 relative">
+           
+            <label for="comment" class="sr-only">Add a comment</label>
+            <input
+              type="text"
+              name="comment"
+              id="comment"
+              class="w-full p-2 border-4 rounded-full pl-10"
+              placeholder="Add a comment"
+            />
+          </div>
+          <div>
+            <button type="submit">
+              <i class="ri-send-plane-fill font-semibold p-2 text-2xl"></i>
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
 
-    <% include ./partials/footer.ejs %>
+    <!-- Left Side - icon -->
+    <div class="absolute -top-5 left-0 p-5">
+      <i
+        class="ri-arrow-left-line text-3xl backicon cursor-pointer hover:rounded-full hover:bg-zinc-300"
+      ></i>
+    </div>
+  </div>
+</div>
+<!-- Edit Side - Details -->
+
+  <div class="  bg-zinc-400 h-full w-[30%] absolute right-0 px-5 py-3 top-0 editpanel  ">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center mb-5">
+        <h1 class="text-2xl font-semibold">Edit Pin</h1>
+      </div>
+      <div>
+        <i class="ri-close-fill text-3xl font-semibold closebtn"></i>
+      </div>
+    </div>
+    <form method="POST" action="/pin/<%= user._id %>">
+
+  <div class="my-10">
+    <h3 class="font-bold">Title</h3>
+    <input
+      type="text"
+      value="<%=UserPost.title%>"
+      name="title" 
+      id="title"
+      class="border-0 rounded-lg w-full h-8 p-2 font-semibold"
+    />
+  </div>
+
+
+  <div class="my-10">
+    <h3 class="font-bold">Description</h3>
+    <input
+      type="text"
+      value="<%=UserPost.description%>"
+      name="description"
+      class="border-0 rounded-lg w-full h-20 p-2 font-semibold"
+    />
+  </div>
+
+
+  <div class="my-10">
+    <h3 class="font-bold">Link</h3>
+    <input
+      type="text"
+    value="null"
+      name="link" 
+      class="border-0 rounded-lg w-full h-8 p-2 font-semibold"
+    />
+  </div>
+
+
+  <div class="btn flex items-center justify-end ">
+    <button class="px-4 py-2 bg-zinc-200 rounded-full hover:bg-zinc-500 font-bold text-md cursor-pointer" formaction="/pin/<%= user._id %>?_method=DELETE">Delete</button> 
+    <input type="submit" value="Save" class="ml-2 px-4 py-2 rounded-full bg-red-600 font-bold text-md cursor-pointer"/>
+  </div>
+</form>
+
+
+    
+  </div>
+
+
+<script>
+  // Add event listener to the back button
+  document.querySelector(".backicon").addEventListener("click", function () {
+    // Navigate back to the previous page
+    window.history.back(-1);
+  });
+  document.querySelector("#editbtn").addEventListener("click", function () {
+    // Toggle the 'hidden' class on the dropdown
+    var dropdown = document.querySelector(".edit");
+    dropdown.classList.toggle("hidden");
+  });
+  document.querySelector(".editpanelbtn").addEventListener("click", function () {
+    // Toggle the 'hidden' class on the dropdown
+    var dropdown = document.querySelector(".editpanel");
+    dropdown.classList.toggle("hidden");
+  });
+  document.querySelector(".closebtn").addEventListener("click", function () {
+    // Toggle the 'hidden' class on the dropdown
+    var dropdown = document.querySelector(".editpanel");
+    dropdown.classList.toggle("hidden");
+  });
+</script>
+<% include ./partials/footer.ejs %>

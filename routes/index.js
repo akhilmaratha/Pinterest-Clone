@@ -42,17 +42,41 @@ router.route('/pin/:id')
   .get(isLoggedIn, async function (req, res, next) {
     const postId = req.params.id;
     const UserPost = await post.findById(postId).populate('user');
-    const { user } = UserPost;
+    const  {user}  = UserPost;
     const comments = await commentModel.find({ postId }).populate('user').sort({ createdAt: 'desc' });
     res.render('pin', { UserPost, user, comments, nav: true });   
   });  
+  router.post('/pin/:id', async (req, res) => {
+    try {
+      const postId = req.params.id;
+      const { title, description } = req.body; // Assuming form fields are sent in the request body
+      const updatedPost = await postModel.findByIdAndUpdate(postId, { title, description }, { new: true });
+      res.json(updatedPost);
+    } catch (error) {
+      console.error('Error updating post:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
+  // Delete post by ID
+  router.delete('/pin/:id', async (req, res) => {
+    try {
+      const postId = req.params.id;
+      await postModel.findByIdAndDelete(postId);
+      res.json({ message: 'Post deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
   router.post('/pin/:id/add-comment', isLoggedIn, async function (req, res) {
       const postId = req.params.id;
       const { comment } = req.body;
   
       const commenter = req.user; // Assuming you have user information in req.user
   
-      // Create a new comment
+
       const newComment = await commentModel.create({
         text: comment,
         user: commenter._id,
