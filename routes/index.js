@@ -7,6 +7,8 @@ const passport = require('passport');
 const localstrategy= require("passport-local");
 passport.use(new localstrategy(userModel.authenticate()));
 const upload = require("./multer");
+
+
 const post = require('./post');
 router.get('/', function(req, res, next) {
   res.render('index',{nav:false});
